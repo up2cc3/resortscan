@@ -40,13 +40,14 @@ public class Ficheros {
                 i=i+1;
                 if (i<20) {
                     if (myFile.getName().contains(".pdf")) {
+                        result=pdfcnumber(myFile.getName());
                         try {
                             pdf.load(myFile);
                         } catch (Exception e) {
                             System.out.println("ERROR: " + e.getMessage());
                         }
                         try {
-                            ficheros.add(new Ficheros(null, myFile, pdf, rec.createrectangle(myFile)));
+                            ficheros.add(new Ficheros(result, myFile, pdf, rec.createrectangle(myFile)));
                         } catch (Exception e) {
                         }
                     }
@@ -88,6 +89,13 @@ public class Ficheros {
         } catch (Exception e){}
 
     }
+    public void setretwist(){
+        rectangle rec=new rectangle();
+        try {
+            this.buf=rec.createretwistedrectangle(this.imageFile);
+        } catch (Exception e){}
+
+    }
     public void settmainf(){
         rectangle rec=new rectangle();
         try {
@@ -114,6 +122,36 @@ public class Ficheros {
     public String getTipo(){return tipo;}
 
     public void setTipo(String s){this.tipo=s;}
+
+    private String pdfcnumber(String s) {
+        if (s==null){return null;}
+        String resultado = s.substring(0,s.length()-4);
+        if (resultado.length() == 5 && ipdfNumeric(resultado)  ){
+            return resultado;
+        } else if (resultado.startsWith("C") && resultado.length() ==6 && ipdfNumeric(resultado.substring(1, 6))) {
+            return resultado.substring(1, 6);
+        } else if (resultado.startsWith("P") && resultado.length() ==6 && ipdfNumeric(resultado.substring(1, 6))) {
+            return resultado.substring(1, 6);
+        } else {
+            return null;
+        }
+
+    }
+
+    private boolean ipdfNumeric(String cadena){
+
+        try {
+            int c=Integer.parseInt(cadena);
+            if(c>40000 && c<99999) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (NumberFormatException nfe){
+            return false;
+        }
+    }
 
 }
 

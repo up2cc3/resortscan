@@ -87,7 +87,7 @@ class rectangle {
     public BufferedImage  createtwistedrectangle(File file) throws Exception {
 
         //Loading an existing PDF document
-        //File file = new File("C:\\Users\\carlos\\Documents\\Tesseract\\Unsorted\\picking.pdf");
+        //File file = new File("C:\\Users\\carlos\\Documents\\tess\\retwist.pdf");
         PDDocument document = PDDocument.load(file);
 
         //Instantiating the PDFRenderer class
@@ -100,6 +100,27 @@ class rectangle {
         image=otherrotate(image);
         //Writing the image to a file
         //ImageIO.write(image, "JPEG", new File("C:\\Users\\carlos\\Documents\\Tesseract\\Unsorted\\myimage.jpg"));
+
+        //Closing the document
+        document.close();
+        return image;
+    }
+    public BufferedImage  createretwistedrectangle(File file) throws Exception {
+        //System.out.println("empiezo");
+        //Loading an existing PDF document
+        //File file = new File("C:\\Users\\Carlos\\tess\\retwist.pdf");
+        PDDocument document = PDDocument.load(file);
+
+        //Instantiating the PDFRenderer class
+        PDFRenderer renderer = new PDFRenderer(document);
+
+        //Rendering an image from the PDF document
+        BufferedImage image = renderer.renderImageWithDPI(0, 300);
+        System.out.println(image.getHeight()+ " h "+ image.getWidth());
+        image = image.getSubimage( 2290, 30, 180, 380);
+        image=otherrerotate(image);
+        //Writing the image to a file
+        //ImageIO.write(image, "JPEG", new File("C:\\Users\\Carlos\\tess\\myimage.jpg"));
 
         //Closing the document
         document.close();
@@ -120,6 +141,22 @@ class rectangle {
     }
     public static BufferedImage otherrotate(BufferedImage image ) {
         double angle=Math.toRadians(90) ;
+        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        int w = image.getWidth(), h = image.getHeight();
+        int neww = (int)Math.floor(w*cos+h*sin), newh = (int) Math.floor(h * cos + w * sin);
+        GraphicsConfiguration gc = getDefaultConfiguration();
+        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww - w) / 2, (newh - h) / 2);
+        //Color c=g.getBackground();
+        //System.out.println(c);
+        g.rotate(angle, w / 2, h / 2);
+        g.drawRenderedImage(image, null);
+        g.dispose();
+        return result;
+    }
+    public static BufferedImage otherrerotate(BufferedImage image ) {
+        double angle=Math.toRadians(270) ;
         double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
         int w = image.getWidth(), h = image.getHeight();
         int neww = (int)Math.floor(w*cos+h*sin), newh = (int) Math.floor(h * cos + w * sin);

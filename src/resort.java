@@ -12,6 +12,7 @@ import org.ghost4j.modifier.ModifierException;
 import org.ghost4j.modifier.SafeAppenderModifier;
 
 //import java.awt.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Calendar;
@@ -59,8 +60,8 @@ public class resort {
         Tesseract instance = new Tesseract(); // JNA Interface Mapping
         // Tesseract1 instance = new Tesseract1(); // JNA Direct Mapping
         File tessDataFolder = LoadLibs.extractTessResources("tessdata");
-        //instance.setDatapath(tessDataFolder.getPath());
-        instance.setDatapath(".");
+        instance.setDatapath(tessDataFolder.getPath());
+        //instance.setDatapath(".");
 //Set the tessdata path
         //instance.setDatapath(tessDataFolder.getAbsolutePath());
         for (Ficheros f : listaFicheros)
@@ -94,7 +95,25 @@ public class resort {
 
                     }
 
-                }  if (f.getResult()==null){
+                }
+                if (f.getResult()==null){
+                    System.out.println("retwist");
+                    f.setretwist();
+                    resultado1 = instance.doOCR(f.getBuf());
+                    System.out.println(resultado1);
+                    if (jcnumber(resultado1)!=null  ) {
+                        resultado=jcnumber(resultado1);
+                        System.out.println("si es twist");
+                        f.setResult(resultado);
+                        v.setResultado2(resultado);
+                        v.setVacio(true);
+
+                    }
+
+                }
+
+
+                if (f.getResult()==null){
                     System.out.println("star");
                     f.setstar();
                     resultado1 = instance.doOCR(f.getBuf());
@@ -139,7 +158,6 @@ public class resort {
             }  catch (Exception e) {
                 e.printStackTrace();
             }
-
     }
 
     public static void juntaPdf(Ficheros f){
@@ -277,6 +295,7 @@ public static boolean isStar(String s){
         }
         fpdf2.delete();
     }
+
 
 }
 
